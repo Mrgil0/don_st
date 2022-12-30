@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const {Server} = require("http"); // 1. 모듈 불러오기
 // const authMiddleware = require("./middlewares/auth-middleware");
 const user = require("./users.routes")
+const page = require("./pages.routes")
 const path = require("path");
 myPath = path.join("static", "view");
 
@@ -22,5 +23,7 @@ app.get('/', (req, res) => {
 });
 
 app.use("/users", [user]);
+
+app.use("/page", [page]);
 
 module.exports = http;
