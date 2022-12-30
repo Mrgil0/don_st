@@ -7,7 +7,7 @@ const {Server} = require("http"); // 1. 모듈 불러오기
 const user = require("./users.routes")
 const page = require("./pages.routes")
 const path = require("path");
-myPath = path.join("static", "view");
+myPath = path.join("static", "view"); //static/view 
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
     res.writeHead(200, {
         'Content-Type': 'text/html'
     });
-    fs.createReadStream(myPath+"/home.html").pipe(res);
+    fs.createReadStream(myPath+"/login.html").pipe(res);
 });
 
 app.use("/users", [user]);
