@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mysql2": "^2.3.3",
+    "node": "^19.3.0",
+    "sequelize": "^6.28.0"
+  },
+  "name": "don_st",
+  "description": "",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mrgil0/don_st.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mrgil0/don_st/issues"
+  },
+  "homepage": "https://github.com/Mrgil0/don_st#readme"
+}
