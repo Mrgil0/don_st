@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "admin",
+    "password": "spa142857",
+    "database": "don_st",
+    "host": "sparta-gil.cylo4tomjgga.ap-northeast-2.rds.amazonaws.com",
+    "dialect": "mysql"
+  }
+}
