@@ -10,16 +10,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
-      this.belongsTo(models.user,{foreignKey: "userId", targetKey: "userId"});
+      this.belongsTo(models.user,{foreignKey: "userIdx", targetKey: "userIdx"});
     }
   }
   laundry.init({
     laundryIdx: {
+      allowNull: false,
+      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER
     },
-    userId: DataTypes.STRING,
+    userIdx: DataTypes.INTEGER,
     address: DataTypes.STRING,
     picture: DataTypes.STRING,
     request: DataTypes.STRING
