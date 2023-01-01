@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('laundry_statuses', {
-      id: {
+      laundryIdx: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,

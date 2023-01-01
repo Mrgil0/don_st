@@ -27,12 +27,14 @@ $(document).keyup(function(e){
     }
 })
 
+let url = ''
+
 $("#modalClose").click(function(){
     $('#modal').css('display', 'none')
     $('#modal').css('left', '0')
     $('#modal').css('top', '0')
     if(refresh == 1){
         refresh = 0
-        location.reload()
+        location.href = url
     }
 })

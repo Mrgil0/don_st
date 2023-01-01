@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-// const PostsController = require('../controllers/posts.controller');
-// const postsController = new PostsController();
+const UsersController = require('../controllers/users.controller');
+const usersController = new UsersController();
 
-// router.get('/', postsController.getPosts);
+router.post('/register', usersController.registerUser);
+router.get('/idCheck/:userId', usersController.checkId);
+router.post('/login', usersController.loginUser);
 // router.post('/', postsController.createPost);
 // router.get('/:postId', postsController.getPostbyId);
 // router.put('/:postId', postsController.modifyPost);
