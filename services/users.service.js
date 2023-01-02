@@ -17,10 +17,12 @@ class UserService {
     }
 
     createUser = async (id, password, phone, category) => {
-        console.log('서비스', id);
         const users = await this.userRepository.createUser(id, password, phone, category);
 
         return users;
+    }
+    decreasePoint = async (userIdx, point) => {
+        await this.userRepository.decreasePoint(userIdx, point);
     }
 }
 

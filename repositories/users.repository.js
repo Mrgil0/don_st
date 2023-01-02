@@ -38,6 +38,11 @@ class UserRepository {
         }
         return true;
     }
+    decreasePoint = async (idx, point) => {
+        await Users.update({userIdx: idx, point: point}, {where: {userIdx: Number(idx)}});
+
+        return true;
+    }
 }
 
 module.exports = UserRepository;
