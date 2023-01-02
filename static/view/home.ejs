@@ -38,18 +38,14 @@
                     <div class="modal-body p-5 pt-0">
                         <form class="">
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control rounded-3" id="floatingInput" placeholder="name@example.com">
-                            <label for="floatingInput">주소</label>
-                        </div>
-                        <div class="mb-3">
-                            <label for="formFileMultiple" class="form-label">세탁 사진 올리기</label>
-                            <input class="form-control" type="file" id="formFileMultiple" multiple>
+                            <input type="text" class="form-control rounded-3" id="addressInput" placeholder="name@example.com">
+                            <label for="addressInput">주소</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="password" class="form-control rounded-3" id="floatingPassword" placeholder="Password">
-                            <label for="floatingPassword">요청사항</label>
+                            <input type="text" class="form-control rounded-3" id="requestInput" placeholder="Password">
+                            <label for="requestInput">요청사항</label>
                         </div>
-                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">신청하기</button>
+                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" id="laundryBtn" type="button">신청하기</button>
                         </form>
                     </div>
                     </div>
@@ -65,6 +61,32 @@
         <!-----------------main content-------------------->
         <div class="p-3 p-dm-5 rounded" style="display:flex; flex-direction:column; justify-content: center; align-items: center;">
             <div style="background-color: lightgrey; width: 100%; text-align: center;">진행 중인 세탁 현황</div>
+            <ul class="list-group mb-3" style="min-width: 240px; margin-top:10px;">
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                    <h6 class="my-0">세탁 주소</h6>
+                    </div>
+                    <span class="text-muted"><%= laundry.address %></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                    <h6 class="my-0">세탁 요청사항</h6>
+                    </div>
+                    <span class="text-muted"><%= laundry.request %></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                    <h6 class="my-0">맡은 사장님</h6>
+                    </div>
+                    <span class="text-muted">미정</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between bg-light">
+                    <div class="text-success">
+                    <h6 class="my-0">세탁 단계</h6>
+                    </div>
+                    <span class="text-success">대기중</span>
+                </li>
+            </ul>
             <ul class="nav justify-content-center rounded" style="border:2px solid #000; margin-top:5px;">
                 <li class="nav-item">
                     <a class="nav-link disabled">대기 중</a>
@@ -86,6 +108,7 @@
                     <a class="nav-link disabled">배송 완료</a>
                 </li>
             </ul>
+
         </div>
         <div class="p-3 p-dm-5 mb-4 rounded" style="display:flex; flex-direction:column; justify-content: center; align-items: center;">
             <div style="background-color: lightgray; width: 100%; text-align: center;">내 세탁 목록</div>
@@ -122,6 +145,29 @@
     $('.btn-close').click(function() {
         $('.modal-dialog').css('display', 'none');
         $('#laundry').css('display', 'block');
+    })
+    $('#laundryBtn').click(function() {
+        let address = $('#addressInput').val();
+        let request = $('#requestInput').val();
+        if([address, request].includes('')) {
+            modalOpen('칸이 비어있습니다.', '');
+            return
+        }
+        $.ajax({
+            type : "POST",
+            url : "/laundry",
+            data : {'address_give': address, 'request_give': request},
+            success : function (response){
+                let result = response['msg']
+                if(result === true){
+                    refresh = 1
+                    url = '/'
+                    modalOpen('신청 완료')
+                }else{
+                    modalOpen('신청 실패')
+                }
+            }
+        })
     })
 </script>
 

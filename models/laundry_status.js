@@ -10,13 +10,16 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
       this.belongsTo(models.laundry,{foreignKey: "laundryIdx", targetKey: "laundryIdx"});
     }
   }
   laundry_status.init({
-    laundryIdx: DataTypes.INTEGER,
-    status: DataTypes.INTEGER
+    laundryIdx: {
+      allowNull: false,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
+    status: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'laundry_status',

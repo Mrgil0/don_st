@@ -15,9 +15,6 @@ module.exports = {
       address: {
         type: Sequelize.STRING
       },
-      picture: {
-        type: Sequelize.STRING
-      },
       request: {
         type: Sequelize.STRING
       },
