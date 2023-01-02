@@ -1,0 +1,1 @@
+const { laundry : Laundry } = require('../models');
