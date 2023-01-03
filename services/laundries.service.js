@@ -19,6 +19,16 @@ class LaundryService{
 
         return laundry;
     }
+    findLaundries = async () => {
+        const laundries = await this.laundryRepository.findLaundries();
+
+        return laundries;
+    }
+    findLaundryAndStatus = async (userIdx) => {
+        const laundry = await this.laundryRepository.findLaundryAndStatus(userIdx);
+
+        return laundry;
+    }
 }
 
 module.exports = LaundryService;
