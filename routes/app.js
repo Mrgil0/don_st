@@ -21,12 +21,17 @@ const http = Server(app); // 2. express app을 http 서버로 감싸기
 
 app.get('/', authMiddleware, laundriesController.findLaundryAndStatus, async (req, res) => {
     const users = res.locals.user;
-    const myLaundry = res.locals.laundry;
-    let laundriesList;
+    const guestLaundry = res.locals.laundry;
+    let stanbyLaundry, ownerLaundry, doneLaundry;
     if(users && users.category === '사장'){
-        laundriesList = await laundriesController.findLaundryList()
+        stanbyLaundry = await laundriesController.findLaundriesStandby()
+        ownerLaundry = await laundriesController.findOwnerLaundry(users)
+        doneLaundry = await laundriesController.findDoneLaundrybyOwner(users)
+        console.log(doneLaundry)
+    } else if(users && users.category === '손님'){
+        doneLaundry = await laundriesController.findDoneLaundrybyGuest(users)
     }
-    res.render('home', {user: users, myLaundry: myLaundry, laundriesList});
+    res.render('home', {user: users, guestLaundry, stanbyLaundry, ownerLaundry, doneLaundry});
 });
 
 app.get('/login', (req, res) => {
@@ -36,8 +41,9 @@ app.get('/login', (req, res) => {
 app.get('/logout', authMiddleware, laundriesController.findLaundryAndStatus, (req, res) => {
     res.cookie('accessToken', null);
     res.cookie('refreshToken', null);
-    const myLaundry = res.locals.laundry;
-    res.render('home', {user: false, myLaundry: myLaundry})
+    const guestLaundry = res.locals.laundry;
+    let stanbyLaundry, ownerLaundry;
+    res.render('home', {user: null, guestLaundry: guestLaundry, stanbyLaundry: stanbyLaundry, ownerLaundry: ownerLaundry})
 });
 
 app.get('/register', (req, res) => {
