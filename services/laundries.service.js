@@ -20,8 +20,13 @@ class LaundryService{
 
         return laundry;
     }
-    findLaundries = async () => {
-        const laundries = await this.laundryRepository.findLaundries();
+    findLaundriesStandby = async () => {
+        const laundries = await this.laundryRepository.findLaundriesStandby();
+
+        return laundries;
+    }
+    findOwnerLaundry = async (userId) => {
+        const laundries = await this.laundryRepository.findOwnerLaundry(userId);
 
         return laundries;
     }
@@ -30,8 +35,18 @@ class LaundryService{
 
         return laundry;
     }
-    modifyStatus = async (userIdx) => {
-        const result = await this.laundryRepository.modifyStatus(userIdx);
+    findDoneLaundrybyOwner = async (userId) => {
+        const laundry = await this.laundryRepository.findDoneLaundrybyOwner(userId);
+
+        return laundry;
+    }
+    findDoneLaundrybyGuest = async (userId) => {
+        const laundry = await this.laundryRepository.findDoneLaundrybyGuest(userId);
+
+        return laundry;
+    }
+    modifyStatus = async (ownerId, userIdx, comment) => {
+        const result = await this.laundryRepository.modifyStatus(ownerId, userIdx, comment);
 
         return result;
     }

@@ -14,31 +14,19 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  laundry.init(
-    {
-      laundryIdx: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataTypes.INTEGER,
-      },
-      userIdx: {
-        allowNull: false,
-        type: DataTypes.INTEGER,
-      },
-      address: {
-        allowNull: false,
-        type: DataTypes.STRING,
-      },
-      request: {
-        allowNull: false,
-        type: DataTypes.STRING,
-      },
+  laundry.init({
+    laundryIdx: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
     },
-    {
-      sequelize,
-      modelName: "laundry",
-    }
-  );
+    userIdx: DataTypes.INTEGER,
+    address: DataTypes.STRING,
+    request: DataTypes.STRING
+  }, {
+    sequelize,
+    modelName: 'laundry',
+  });
   return laundry;
 };

@@ -1,8 +1,7 @@
 const UserRepository = require('../repositories/users.repository');
-const { user : Users } = require('../models');
 
 class UserService {
-    userRepository = new UserRepository(Users);
+    userRepository = new UserRepository();
     
     findUser = async (id, password) => {
         const users = await this.userRepository.findUser(id, password);
@@ -23,6 +22,9 @@ class UserService {
     }
     decreasePoint = async (userIdx, point) => {
         await this.userRepository.decreasePoint(userIdx, point);
+    }
+    increasePoint = async (userId, point) => {
+        await this.userRepository.increasePoint(userId, point);
     }
 }
 

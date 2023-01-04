@@ -43,13 +43,60 @@ function removeFontColor(){
         element.setAttribute('style', 'color: black')
     })
 }
-function getLaundry(userIdx){
+function getLaundry(userIdx, status){
+    if(status === '배송 중'){
+        $('#doneLaundryModal') .css('display', 'block')
+        return;
+    }
     $.ajax({
-        type : "GET",
+        type : "PUT",
         url : "/laundry",
-        data : {'user_idx': userIdx},
+        data : {'userIdx': userIdx},
         success : function (response){
             let result = response['msg']
+            if(result === '수정'){
+                refresh = 1
+                url = '/'
+                modalOpen('세탁 진행 완료')
+            }else if(result === '실패'){
+                modalOpen('세탁 작업이 실패했습니다')
+            }
+        }
+    })
+}
+function doneLaundryBtn(userIdx){
+    let comment = $('#laundryComment').val()
+    $('#doneLaundryModal').css('display', 'none');
+    $.ajax({
+        type : "PUT",
+        url : "/laundry",
+        data : {'userIdx': userIdx, 'comment': comment},
+        success : function (response){
+            let result = response['msg']
+            if(result === '수정'){
+                refresh = 1
+                url = '/'
+                modalOpen('세탁 진행 완료')
+            }else if(result === '실패'){
+                modalOpen('세탁 작업이 실패했습니다')
+            }
+        }
+    })
+}
+function putLaundry(data){
+    $.ajax({
+        type : "PUT",
+        url : "/laundry",
+        data : {'userIdx': data},
+        success : function (response){
+            let result = response['msg']
+            if(result === '수정'){
+                refresh = 1
+                url = '/'
+                modalOpen('세탁 진행 완료')
+            }else if(result === '실패'){
+                modalOpen('세탁 작업이 실패했습니다')
+            }
         }
     })
 }
