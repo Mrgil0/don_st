@@ -8,6 +8,10 @@ const sequelize = new Sequelize("don_st", "admin", "spa142857",{
 const Status = ['대기', '수거', '수거완료', '배송', '배송완료'];
 
 class LaundryRepository{
+    constructor(laundryModel) {
+        this.laundryModel = laundryModel;
+    }
+
     createLaundry = async (address, request, userIdx) => {
         try{
             await Laundries.create({userIdx:Number(userIdx), address:address, request:request});
@@ -31,19 +35,27 @@ class LaundryRepository{
 
         return laundry;
     }
+    
+    // [원본]
+    // findLaundries = async () => {
+    //     const laundries = await sequelize.query(
+    //         `SELECT l.laundryIdx, u.userId, l.address, l.request, s.status FROM laundries l INNER JOIN laundry_statuses s ON l.laundryIdx = s.laundryIdx 
+    //         INNER JOIN users u ON u.userIdx = l.userIdx
+    //         WHERE s.status = '대기'`,
+    //         {
+    //             raw:true,
+    //             nest:true,
+    //             type: sequelize.QueryTypes.SELECT,
+    //         }
+    //     )
+    //     return laundries;
+    // }
     findLaundries = async () => {
-        const laundries = await sequelize.query(
-            `SELECT l.laundryIdx, u.userId, l.address, l.request, s.status FROM laundries l INNER JOIN laundry_statuses s ON l.laundryIdx = s.laundryIdx 
-            INNER JOIN users u ON u.userIdx = l.userIdx
-            WHERE s.status = '대기'`,
-            {
-                raw:true,
-                nest:true,
-                type: sequelize.QueryTypes.SELECT,
-            }
-        )
+        const laundries = await this.laundryModel.findAll();
+
         return laundries;
     }
+
     findLaundryAndStatus = async (userIdx) => {
         const laundry = await sequelize.query(
             `SELECT * FROM laundries L INNER JOIN laundry_statuses S ON L.laundryIdx = S.laundryIdx

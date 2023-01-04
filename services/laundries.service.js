@@ -1,7 +1,8 @@
 const LaundryRepository = require('../repositories/laundries.repository');
+const { Laundries } = require("../models/index");
 
 class LaundryService{
-    laundryRepository = new LaundryRepository();
+    laundryRepository = new LaundryRepository(Laundries);
 
     createLaundry = async (address, request, userIdx) =>{
         const result = await this.laundryRepository.createLaundry(address, request, userIdx);

@@ -1,4 +1,3 @@
-const { describe } = require("node:test");
 const LaundriesService = require("../../../services/laundries.service.js");
 
 let mockLaundriesRepository = {
@@ -6,7 +5,7 @@ let mockLaundriesRepository = {
   createStatus: jest.fn(),
   findLaundry: jest.fn(),
   findLaundries: jest.fn(),
-  findLaundryAndStatus: jest.fn(),
+  findLaundryAndStatus: jest.fn()
 };
 
 let laundriesService = new LaundriesService();
@@ -17,19 +16,19 @@ describe("Layered Architecture Pattern Laundries Service Unit Test", () => {
     jest.resetAllMocks();
   });
 
-  test("Laundries Service findLaundry Method", async () => {
-    const findLaundryReturnValue = [];
+  test("Laundries Service findLaundries Method", async () => {
+    const findLaundriesReturnValue = [];
 
     // Repository의 findAllPost Method를 Mocking하고, findAllPostReturnValue를 Return 값으로 변경합니다.
-    mockLaundriesRepository.findLaundry = jest.fn(() => {
-      return findLaundryReturnValue;
+    mockLaundriesRepository.findLaundries = jest.fn(() => {
+      return 'findLaundriesReturnValue';
     });
 
     // PostService의 findAllPost Method를 실행합니다.
-    const Laundry = await laundriesService.findLaundry();
+    const Laundry = await laundriesService.findLaundries();
 
-    expect(Laundry).toBe(findLaundryReturnValue);
+    expect(Laundry).toBe('findLaundriesReturnValue');
 
-    expect(mockLaundriesRepository.findLaundry).toHaveBeenCalledTimes(1);
+    expect(mockLaundriesRepository.findLaundries).toHaveBeenCalledTimes(1);
   });
 });
