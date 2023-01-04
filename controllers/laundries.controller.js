@@ -10,11 +10,6 @@ class LaundryController{
         const { address_give, request_give } = req.body;
         const user = res.locals.user
 
-        if(user.category === '사장'){
-            await this.laundryService.modifyStatus(user.userIdx);
-            return res.send({'msg': '수정'});
-        }
-
         const laundry = await this.laundryService.findLaundry(user.userIdx);
 
         if(laundry){
@@ -30,12 +25,19 @@ class LaundryController{
         } 
         return res.send({'msg': '실패'});
     }
-    findLaundryList = async (req, res) => {
-        const laundry = await this.laundryService.findLaundries();
+    findLaundriesStandby = async (req, res) => {
+        const laundry = await this.laundryService.findLaundriesStandby();
         if(laundry.length > 0){
             return laundry
         }
-        return [];
+        return false;
+    }
+    findOwnerLaundry = async (user) => {
+        const laundry = await this.laundryService.findOwnerLaundry(user.userId);
+        if(laundry.length > 0){
+            return laundry
+        }
+        return false;
     }
     findLaundryAndStatus = async (req, res, next) => {
         const user = res.locals.user;
@@ -46,10 +48,39 @@ class LaundryController{
             const laundry = await this.laundryService.findLaundryAndStatus(user.userIdx);
             if(laundry.length <= 0){
                 res.locals.laundry = false;    
-                 return next();
+                return next();
             }
             res.locals.laundry = laundry;
             next();
+        }
+    }
+    findDoneLaundrybyOwner = async (user) => {
+        const laundry = await this.laundryService.findDoneLaundrybyOwner(user.userId);
+
+        return laundry;
+    }
+    findDoneLaundrybyGuest = async (user) => {
+        const laundry = await this.laundryService.findDoneLaundrybyGuest(user.userId);
+
+        return laundry;
+    }
+    updateLaundry = async (req, res) => {
+        const user = res.locals.user;
+        const { userIdx } = req.body;
+        let comment;
+        try{
+            comment = req.body['comment']
+        }catch(e){}
+        const result = await this.laundryService.modifyStatus(user.userId, userIdx, comment);
+
+        if(result === 'done'){
+            await this.userService.increasePoint(user.userId, user.point + 20000)
+        }
+
+        if(result){
+            return res.send({'msg': '수정'});
+        } else{
+            return res.send({'msg': '실패'});
         }
     }
 }

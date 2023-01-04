@@ -1,194 +1,469 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="../css/home.css" rel="stylesheet" type="text/css">
-    <link href="../css/modal.css" rel="stylesheet" type="text/css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
-            integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
-            crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
-	integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-	crossorigin="anonymous"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="../css/home.css" rel="stylesheet" type="text/css" />
+    <link href="../css/modal.css" rel="stylesheet" type="text/css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.min.js"
+      integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+      crossorigin="anonymous"
+    ></script>
     <title>돈세탁</title>
-</head>
-<body>
-    <div class="container">
-        <%-include('component/header.ejs')%>
-    </div>
+  </head>
+  <body>
+    <div class="container"><%-include('component/header.ejs')%></div>
     <main class="container">
-        <!-----------------left-sidebar-------------------->
-        <div class="p-3 p-dm-5 rounded" style="display:flex; flex-direction:column; align-items: center; min-height: 150px;" id="firstDiv">
-            <%if (user) { %>
-                <%if (user.category == '손님') { %>
-                <div style="background-color: lightgray; width: 100%; text-align: center;">세탁 신청하기</div>
-                <button class="btn btn-primary" type="button" id="laundry" style="margin-bottom: auto; margin-top:15px;">세탁 신청하기</button>
-                <div class="modal-dialog" style="margin-top:15px;" role="document">
-                    <div class="modal-content rounded-4 shadow">
-                    <div class="modal-header p-5 pb-4 border-bottom-0">
-                        <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
-                        <h1 class="fw-bold mb-0 fs-2">세탁 신청</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body p-5 pt-0">
-                        <form class="">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control rounded-3" id="addressInput" placeholder="name@example.com">
-                            <label for="addressInput">주소</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control rounded-3" id="requestInput" placeholder="Password">
-                            <label for="requestInput">요청사항</label>
-                        </div>
-                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" id="laundryBtn" type="button">신청하기</button>
-                        </form>
-                    </div>
-                    </div>
-                </div>
-                <% } else { %>
-                <div style="background-color: lightgray; width: 100%; text-align: center;">신청 가능한 세탁 신청 목록</div>
-                <div style="display:flex; flex-direction:row; align-items: center;">
-                    <% for (const laundry of laundriesList) { %>
-                    <ul class="list-group mb-1 mx-2" style="min-width: 240px; margin-top:10px;">
-                        <li class="list-group-item d-flex justify-content-between lh-sm">
-                            <div>
-                            <h6 class="my-0">신청 아이디</h6>
-                            </div>
-                            <span class="text-muted"><%= laundry.userId %></span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between lh-sm">
-                            <div>
-                            <h6 class="my-0">세탁 주소</h6>
-                            </div>
-                            <span class="text-muted"><%= laundry.address %></span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between lh-sm">
-                            <div>
-                            <h6 class="my-0">세탁 요청사항</h6>
-                            </div>
-                            <span class="text-muted"><%= laundry.request %></span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between lh-sm">
-                            <div>
-                            <h6 class="my-0">맡은 사장님</h6>
-                            </div>
-                            <span class="text-muted">미정</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between bg-light">
-                            <div class="text-success">
-                            <h6 class="my-0">세탁 단계</h6>
-                            </div>
-                            <span class="text-success"><%= laundry.status %> 중</span>
-                        </li>
-                        <button class="w-100 mb-2 my-1 btn btn-outline-primary" onclick="getLaundry('<%= laundry.userId %>')" type="button">신청하기</button>
-                    </ul>
-                    <% } %>
-                </div>
-                <% } %>
-            <% } else { %>
-            <button class="btn btn-outline-primary" style="margin-bottom: auto; margin-top:5px" disabled>로그인이 필요합니다</button>
-            <% } %>
+      <!-----------------left-sidebar-------------------->
+      <div
+        class="p-3 p-dm-5 rounded"
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          min-height: 150px;
+        "
+        id="firstDiv"
+      >
+        <%if (user) { %> <%if (user.category == '손님') { %>
+        <div
+          style="background-color: lightgray; width: 100%; text-align: center"
+        >
+          세탁 신청하기
         </div>
-        <!-----------------main content-------------------->
-        <div class="p-3 p-dm-5 rounded" style="display:flex; flex-direction:column; justify-content: center; align-items: center;">
-            <div style="background-color: lightgrey; width: 100%; text-align: center;">진행 중인 세탁 현황</div>
-            <ul class="nav justify-content-center rounded" style="border:2px solid #000; margin-top:5px;">
-                <li class="nav-item">
-                    <a class="nav-link disabled" id="대기">대기 중</a>
-                </li>
-                <p style="line-height:36px; height:18px">→</p>
-                <li class="nav-item">
-                    <a class="nav-link disabled" id="수거">수거 중</a>
-                </li>
-                <p style="line-height:36px; height:18px">→</p>
-                <li class="nav-item">
-                    <a class="nav-link disabled" id="수거완료">수거 완료</a>
-                </li>
-                <p style="line-height:36px; height:18px">→</p>
-                <li class="nav-item">
-                    <a class="nav-link disabled" id="배송">배송 중</a>
-                </li>
-                <p style="line-height:36px; height:18px">→</p>
-                <li class="nav-item">
-                    <a class="nav-link disabled" id="배송완료">배송 완료</a>
-                </li>
-            </ul>
-            <%if (myLaundry) { %>
-            <ul class="list-group mb-1" style="min-width: 240px; margin-top:10px;">
-                <li class="list-group-item d-flex justify-content-between lh-sm">
-                    <div>
-                    <h6 class="my-0">세탁 주소</h6>
-                    </div>
-                    <span class="text-muted"><%= myLaundry[0].address %></span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between lh-sm">
-                    <div>
-                    <h6 class="my-0">세탁 요청사항</h6>
-                    </div>
-                    <span class="text-muted"><%= myLaundry[0].request %></span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between lh-sm">
-                    <div>
-                    <h6 class="my-0">맡은 사장님</h6>
-                    </div>
-                    <span class="text-muted">미정</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between bg-light">
-                    <div class="text-success">
-                    <h6 class="my-0">세탁 단계</h6>
-                    </div>
-                    <span class="text-success"><%= myLaundry[0].status %> 중</span>
-                </li>
-            </ul>
-            <button class="btn btn-outline-danger" style="margin-bottom: auto; margin-top:auto" onclick="deleteLaundry()">세탁 취소하기</button>
-            <% } else { %>
-            <ul class="list-group mb-3" style="min-width: 240px; margin-top:10px;">
-                <button class="btn btn-outline-primary" style="margin-bottom: auto; margin-top:5px" disabled>신청한 세탁이 없습니다.</button>
-            
-            </ul>
-            <% } %>
-        </div>
-        <div class="p-3 p-dm-5 mb-4 rounded" style="display:flex; flex-direction:column; justify-content: center; align-items: center;">
-            <div style="background-color: lightgray; width: 100%; text-align: center;">내 세탁 목록</div>
-            <div class="album py-2 bg-light">
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
-                    <div class="col">
-                        <div class="card shadow-sm">
-                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-                            <div class="card-body">
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                </div>
-                                <small class="text-muted">9 mins</small>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <button
+          class="btn btn-primary"
+          type="button"
+          id="laundry"
+          style="margin-bottom: auto; margin-top: 15px"
+        >
+          세탁 신청하기
+        </button>
+        <div class="modal-dialog" style="margin-top: 15px" role="document">
+          <div class="modal-content rounded-4 shadow">
+            <div class="modal-header p-5 pb-4 border-bottom-0">
+              <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
+              <h1 class="fw-bold mb-0 fs-2">세탁 신청</h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
+            <div class="modal-body p-5 pt-0">
+              <form class="">
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control rounded-3"
+                    id="addressInput"
+                    placeholder="name@example.com"
+                  />
+                  <label for="addressInput">주소</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control rounded-3"
+                    id="requestInput"
+                    placeholder="Password"
+                  />
+                  <label for="requestInput">요청사항</label>
+                </div>
+                <button
+                  class="w-100 mb-2 btn btn-lg rounded-3 btn-primary"
+                  id="laundryBtn"
+                  type="button"
+                >
+                  신청하기
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
+        <% } else { %>
+        <div
+          style="background-color: lightgray; width: 100%; text-align: center"
+        >
+          신청 가능한 세탁 신청 목록
+        </div>
+        <div style="display: flex; flex-direction: row; align-items: center">
+          <%if (stanbyLaundry) { %> <% for (const laundry of stanbyLaundry) { %>
+          <ul
+            class="list-group mb-1 mx-2"
+            style="min-width: 240px; margin-top: 10px"
+          >
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <div>
+                <h6 class="my-0">신청 아이디</h6>
+              </div>
+              <span class="text-muted"><%= laundry.userId %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <div>
+                <h6 class="my-0">세탁 주소</h6>
+              </div>
+              <span class="text-muted"><%= laundry.address %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <div>
+                <h6 class="my-0">세탁 요청사항</h6>
+              </div>
+              <span class="text-muted"><%= laundry.request %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <div>
+                <h6 class="my-0">맡은 사장님</h6>
+              </div>
+              <span class="text-muted">미정</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between bg-light">
+              <div class="text-success">
+                <h6 class="my-0">세탁 단계</h6>
+              </div>
+              <span class="text-success"><%= laundry.status %></span>
+            </li>
+            <button
+              class="w-100 mb-2 my-1 btn btn-outline-primary"
+              onclick="getLaundry('<%= laundry.userIdx %>', '<%= laundry.status %>')"
+              type="button"
+            >
+              신청하기
+            </button>
+          </ul>
+          <% } %> <% } else { %>
+          <ul
+            class="list-group mb-3"
+            style="min-width: 240px; margin-top: 10px"
+          >
+            <button
+              class="btn btn-outline-primary"
+              style="margin-bottom: auto; margin-top: 5px"
+              disabled
+            >
+              신청 가능한 세탁이 없습니다.
+            </button>
+          </ul>
+          <% } %>
+        </div>
+        <% } %> <% } else { %>
+        <button
+          class="btn btn-outline-primary"
+          style="margin-bottom: auto; margin-top: 5px"
+          disabled
+        >
+          로그인이 필요합니다
+        </button>
+        <% } %>
+      </div>
+      <!-----------------main content-------------------->
+      <div
+        class="p-3 p-dm-5 rounded"
+        style="
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <div
+          style="background-color: lightgrey; width: 100%; text-align: center"
+        >
+          진행 중인 세탁 현황
+        </div>
+        <ul
+          class="nav justify-content-center rounded"
+          style="border: 2px solid #000; margin-top: 5px"
+        >
+          <li class="nav-item">
+            <a class="nav-link disabled" id="대기 중">대기 중</a>
+          </li>
+          <p style="line-height: 36px; height: 18px">→</p>
+          <li class="nav-item">
+            <a class="nav-link disabled" id="수거 중">수거 중</a>
+          </li>
+          <p style="line-height: 36px; height: 18px">→</p>
+          <li class="nav-item">
+            <a class="nav-link disabled" id="수거 완료">수거 완료</a>
+          </li>
+          <p style="line-height: 36px; height: 18px">→</p>
+          <li class="nav-item">
+            <a class="nav-link disabled" id="배송 중">배송 중</a>
+          </li>
+          <p style="line-height: 36px; height: 18px">→</p>
+          <li class="nav-item">
+            <a class="nav-link disabled" id="배송 완료">배송 완료</a>
+          </li>
+        </ul>
+        <%if (user) { %> <%if (user.category === '손님') { %> <%if
+        (guestLaundry) { %>
+        <ul class="list-group mb-1" style="min-width: 240px; margin-top: 10px">
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">세탁 주소</h6>
+            </div>
+            <span class="text-muted"><%= guestLaundry[0].address %></span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">세탁 요청사항</h6>
+            </div>
+            <span class="text-muted"><%= guestLaundry[0].request %></span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">맡은 사장님</h6>
+            </div>
+            <%if (guestLaundry.ownerId) { %>
+            <span class="text-muted"><%= guestLaundry[0].ownerId %></span>
+            <% } else { %>
+            <span class="text-muted">미정</span>
+            <% } %>
+          </li>
+          <li class="list-group-item d-flex justify-content-between bg-light">
+            <div class="text-success">
+              <h6 class="my-0">세탁 단계</h6>
+            </div>
+            <span class="text-success"><%= guestLaundry[0].status %></span>
+          </li>
+        </ul>
+        <button
+          class="btn btn-outline-danger"
+          style="margin-bottom: auto; margin-top: auto"
+          onclick="deleteLaundry()"
+        >
+          세탁 취소하기
+        </button>
+        <% } else { %>
+        <ul class="list-group mb-3" style="min-width: 240px; margin-top: 10px">
+          <button
+            class="btn btn-outline-primary"
+            style="margin-bottom: auto; margin-top: 5px"
+            disabled
+          >
+            신청한 세탁이 없습니다.
+          </button>
+        </ul>
+        <% } %> <% } else { %> <%if (ownerLaundry) { %> <%for (const laundry of
+        ownerLaundry) { %>
+        <ul class="list-group mb-1" style="min-width: 240px; margin-top: 10px">
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">세탁 주소</h6>
+            </div>
+            <span class="text-muted"><%= laundry.address %></span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">세탁 요청사항</h6>
+            </div>
+            <span class="text-muted"><%= laundry.request %></span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">맡은 사장님</h6>
+            </div>
+            <span class="text-muted"><%= laundry.ownerId %></span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between bg-light">
+            <div class="text-success">
+              <h6 class="my-0">세탁 단계</h6>
+            </div>
+            <span class="text-success"><%= laundry.status %></span>
+          </li>
+        </ul>
+        <button
+          class="btn btn-outline-danger"
+          id="ownerNextBtn"
+          style="margin-bottom: auto; margin-top: auto"
+          onclick="getLaundry('<%= laundry.userIdx %>', '<%= laundry.status %>')"
+        >
+          다음 단계로 넘어가기
+        </button>
+        <div
+          class="modal-content rounded-4 shadow"
+          id="doneLaundryModal"
+          style="width: 40%; height: 50%; display: none"
+        >
+          <div class="modal-header p-5 pb-4 border-bottom-0">
+            <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
+            <h1 class="fw-bold mb-0 fs-2">손님에게 남길 한마디</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body p-5 pt-0">
+            <form class="">
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control rounded-3"
+                  id="laundryComment"
+                  placeholder="Password"
+                />
+                <label for="requestInput">한마디</label>
+              </div>
+              <button
+                class="w-100 mb-2 btn btn-lg rounded-3 btn-primary"
+                onclick="doneLaundryBtn('<%= laundry.userIdx %>')"
+                type="button"
+              >
+                배송 완료하기
+              </button>
+            </form>
+          </div>
+        </div>
+        <% } %> <% } else { %>
+        <ul class="list-group mb-3" style="min-width: 240px; margin-top: 10px">
+          <button
+            class="btn btn-outline-primary"
+            style="margin-bottom: auto; margin-top: 5px"
+            disabled
+          >
+            받은 세탁이 없습니다.
+          </button>
+        </ul>
+        <% } %> <% } %> <% } %>
+      </div>
+      <div
+        class="p-3 p-dm-5 mb-4 rounded"
+        style="
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <div
+          style="background-color: lightgray; width: 100%; text-align: center"
+        >
+          완료된 세탁 목록
+        </div>
+        <div class="album py-2 bg-light">
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
+            <%if (user) { %> <%if (doneLaundry) { %> <%for (const laundry of
+            doneLaundry) { %>
+            <ul
+              class="list-group mb-1"
+              style="min-width: 240px; margin-top: 10px"
+            >
+              <li class="list-group-item d-flex justify-content-between lh-sm">
+                <div>
+                  <h6 class="my-0">신청 유저</h6>
+                </div>
+                <span class="text-muted"><%= laundry.userId %></span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between lh-sm">
+                <div>
+                  <h6 class="my-0">세탁 주소</h6>
+                </div>
+                <span class="text-muted"><%= laundry.address %></span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between lh-sm">
+                <div>
+                  <h6 class="my-0">세탁 요청사항</h6>
+                </div>
+                <span class="text-muted"><%= laundry.request %></span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between bg-light"
+              >
+                <div class="text">
+                  <h6 class="my-0">세탁 단계</h6>
+                </div>
+                <span class="text-muted"><%= laundry.status %></span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between bg-light"
+              >
+                <div class="text-success">
+                  <h6 class="my-0">완료 메세지</h6>
+                </div>
+                <span class="text-success"><%= laundry.reason %></span>
+              </li>
+              <%if (user.category === '손님') { %>
+              <button
+                class="btn btn-info"
+                type="button"
+                style="margin-bottom: auto; margin-top: auto"
+              >
+                평점 쓰기
+              </button>
+              <% } else { %>
+              <button
+                class="btn btn-info"
+                type="button"
+                style="margin-bottom: auto; margin-top: auto"
+              >
+                평점 보기
+              </button>
+              <% } %>
+            </ul>
+            <% } %> <% } else { %>
+            <ul
+              class="list-group mb-3"
+              style="min-width: 240px; margin-top: 10px"
+            >
+              <button
+                class="btn btn-outline-primary"
+                style="margin-bottom: auto; margin-top: 5px"
+                disabled
+              >
+                신청한 세탁이 없습니다.
+              </button>
+            </ul>
+            <% } %> <% } else { %>
+            <button
+              class="btn btn-outline-primary"
+              style="margin-bottom: auto; margin-top: 5px; min-width:200px"
+              disabled
+            >
+              로그인이 필요합니다
+            </button>
+            <% } %>
+          </div>
+        </div>
+      </div>
     </main>
-</body>
-<%-include('component/modal.ejs')%>
-<script type="text/javascript" src="../js/modal.js"></script>
-<script type="text/javascript" src="../js/home.js"></script>
-<script>
-    $(document).ready(function(){
-        '<%if (myLaundry) { %>'
-            let status = '<%-myLaundry[0].status%>'
-            let nav_item = document.getElementById(status)
-            removeFontColor();
-            nav_item.setAttribute('style', 'color: green')
-        '<% } else { %>'
-            removeFontColor();
-        '<% } %>'
-});
-</script>
+  </body>
+  <%-include('component/modal.ejs')%>
+  <script type="text/javascript" src="../js/modal.js"></script>
+  <script type="text/javascript" src="../js/home.js"></script>
+  <script>
+    $(document).ready(function () {
+      "<%if (guestLaundry) { %>";
+      let myLaundryStatus = "<%-guestLaundry[0].status%>";
+      let myLaundryItem = document.getElementById(myLaundryStatus);
+      removeFontColor();
+      myLaundryItem.setAttribute("style", "color: green");
+      ("<% } else { %>");
+      removeFontColor();
+      ("<% } %>");
+      ("<%if (ownerLaundry) { %>");
+      let ownerLaundryStatus = "<%-ownerLaundry[0].status%>";
+      let ownerLaundryItem = document.getElementById(ownerLaundryStatus);
+      removeFontColor();
+      ownerLaundryItem.setAttribute("style", "color: green");
+      ("<% } else { %>");
+      removeFontColor();
+      ("<% } %>");
+    });
+  </script>
 </html>
