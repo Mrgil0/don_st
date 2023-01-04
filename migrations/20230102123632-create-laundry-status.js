@@ -5,7 +5,6 @@ module.exports = {
     await queryInterface.createTable('laundry_statuses', {
       laundryIdx: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
