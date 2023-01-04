@@ -19,14 +19,14 @@ app.set('view engine', 'ejs');
 app.set('views', './static/view');
 const http = Server(app); // 2. express app을 http 서버로 감싸기
 
-app.get('/', authMiddleware, laundriesController.findLaundryAndStatus, (req, res) => {
+app.get('/', authMiddleware, laundriesController.findLaundryAndStatus, async (req, res) => {
     const users = res.locals.user;
     const myLaundry = res.locals.laundry;
-    let laundriesList = {};
+    let laundriesList;
     if(users && users.category === '사장'){
-        laundriesList =  laundriesController.findLaundryList();
+        laundriesList = await laundriesController.findLaundryList()
     }
-    res.render('home', {user: users, myLaundry: myLaundry, laundryList: laundriesList});
+    res.render('home', {user: users, myLaundry: myLaundry, laundriesList});
 });
 
 app.get('/login', (req, res) => {
