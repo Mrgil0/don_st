@@ -29,6 +29,11 @@ class LaundryService{
 
         return laundry;
     }
+    modifyStatus = async (userIdx) => {
+        const result = await this.laundryRepository.modifyStatus(userIdx);
+
+        return result;
+    }
 }
 
 module.exports = LaundryService;

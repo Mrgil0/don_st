@@ -29,7 +29,7 @@ $(document).keyup(function(e){
 
 let url = ''
 
-$("#modalClose").click(function(){
+async function modalClose(){
     $('#modal').css('display', 'none')
     $('#modal').css('left', '0')
     $('#modal').css('top', '0')
@@ -37,4 +37,4 @@ $("#modalClose").click(function(){
         refresh = 0
         location.href = url
     }
-})
+}

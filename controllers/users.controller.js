@@ -24,7 +24,6 @@ class UsersController{
 
         const findUser = await this.userService.findUserbyId(userId);
         if(findUser.length > 0){
-            console.log(findUser.length)
             return res.send({'msg': true})
         }
         return res.send({'msg': false});
