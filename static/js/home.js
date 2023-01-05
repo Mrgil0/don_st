@@ -1,11 +1,9 @@
 let refresh = 0;
 $('#laundry').click(function() {
     $('.modal-dialog').css('display', 'block');
-    $(this).css('display', 'none');
 })
 $('.btn-close').click(function() {
     $('.modal-dialog').css('display', 'none');
-    $('#laundry').css('display', 'block');
 })
 $('#laundryBtn').click(function() {
     let address = $('#addressInput').val();
@@ -65,10 +63,14 @@ function removeFontColor(){
         element.setAttribute('style', 'color: black')
     })
 }
-$('#laundryCommentBtn').click(function(){
-    $("#LaundryCommentModal").css("display", "block");
-    $('#laundryComment').focus();
-})
+function laundryComment(laundryIdx){
+    let modal = $('.modal-dialog'+laundryIdx);
+    modal.css('display', 'block');
+}
+
+function closeModel(laundryIdx){
+    $('.modal-dialog'+laundryIdx).css('display', 'none');;
+}
 
 function putLaundry(userIdx, status, string){
     if(status === '배송 중'){
