@@ -214,6 +214,12 @@
         <ul class="list-group mb-1" style="min-width: 240px; margin-top: 10px">
           <li class="list-group-item d-flex justify-content-between lh-sm">
             <div>
+              <h6 class="my-0">신청 아이디</h6>
+            </div>
+            <span class="text-muted"><%= guestLaundry[0].userId %></span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
               <h6 class="my-0">세탁 주소</h6>
             </div>
             <span class="text-muted"><%= guestLaundry[0].address %></span>
@@ -228,7 +234,7 @@
             <div>
               <h6 class="my-0">맡은 사장님</h6>
             </div>
-            <%if (guestLaundry.ownerId) { %>
+            <%if (guestLaundry[0].ownerId) { %>
             <span class="text-muted"><%= guestLaundry[0].ownerId %></span>
             <% } else { %>
             <span class="text-muted">미정</span>
@@ -415,6 +421,12 @@
                   <h6 class="my-0">세탁 주소</h6>
                 </div>
                 <span class="text-muted"><%= laundry.address %></span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between lh-sm">
+                <div>
+                  <h6 class="my-0">맡은 사장님</h6>
+                </div>
+                <span class="text-muted"><%= laundry.ownerId %></span>
               </li>
               <li class="list-group-item d-flex justify-content-between lh-sm">
                 <div>

@@ -62,19 +62,22 @@ class LaundryRepository{
     }
     findLaundryAndStatus = async (userIdx) => {
         const laundry = await sequelize.query(
-            `SELECT * FROM laundries L INNER JOIN laundry_statuses S ON L.laundryIdx = S.laundryIdx
-            WHERE ` + userIdx + `= L.userIdx`,
+            `SELECT l.laundryIdx, u.userId, l.address, l.request, s.ownerId, s.status  FROM laundries l 
+            INNER JOIN laundry_statuses s ON l.laundryIdx = s.laundryIdx 
+            INNER JOIN users u ON u.userIdx = l.userIdx
+            WHERE ` + userIdx + `= l.userIdx`,
             {
                 raw:true,
                 nest:true,
             }
         )
+        console.log(laundry);
         return laundry;
     }
     findDoneLaundrybyOwner = async (userId) => {
         const laundry = await sequelize.query(
             `SELECT d.laundryIdx, d.userId, d.ownerId, d.address, d.request, d.status, d.reason, c.star, c.comment 
-            FROM laundry_dones d INNER JOIN laundry_comments c ON d.laundryIdx = c.laundryIdx
+            FROM laundry_dones d LEFT JOIN laundry_comments c ON d.laundryIdx = c.laundryIdx
             WHERE '` + userId + `'= d.ownerId`,
             {
                 raw:true,
@@ -88,7 +91,7 @@ class LaundryRepository{
     findDoneLaundrybyGuest = async (userId) => {
         const laundry = await sequelize.query(
             `SELECT d.laundryIdx, d.userId, d.ownerId, d.address, d.request, d.status, d.reason, c.star, c.comment 
-            FROM laundry_dones d INNER JOIN laundry_comments c ON d.laundryIdx = c.laundryIdx
+            FROM laundry_dones d LEFT JOIN laundry_comments c ON d.laundryIdx = c.laundryIdx
             WHERE '` + userId + `'= d.userId`,
             {
                 raw:true,
