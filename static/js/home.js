@@ -20,22 +20,44 @@ $('#laundryBtn').click(function() {
         data : {'address_give': address, 'request_give': request},
         success : function (response){
             let result = response['msg']
-            if(result === '신청'){
+            if(result){
                 refresh = 1
                 url = '/'
                 modalOpen('신청 완료')
-            }else if(result === '실패'){
-                modalOpen('세탁 신청이 실패했습니다(한 건만 가능)')
             }else{
-                refresh = 1
-                url = '/'
-                modalOpen('세탁을 받았습니다.')
+                modalOpen('세탁 신청이 실패했습니다(한 건만 가능)')
             }
         }
     })
 })
-function deleteLaundry(){
-
+function deleteLaundry(laundryIdx, status){
+    if(status != '대기 중'){
+        modalOpen('대기 중인 세탁 건만 취소할 수 있습니다.')
+        return
+    }
+    $('#deleteLaundryModal').css('display', 'block')
+}
+function deleteLaundryBtn(laundryIdx){
+    const laundryReason = $('#laundryReason').val();
+    if(laundryReason === ''){
+        modalOpen('사유를 적어주세요.');
+        return
+    }
+    $.ajax({
+        type : "delete",
+        url : "/laundry",
+        data: {'laundryIdx': laundryIdx, 'laundryReason': laundryReason},
+        success : function (response){
+            let result = response['msg']
+            if(result){
+                refresh = 1
+                url = '/'
+                modalOpen('세탁 취소 완료')
+            }else{
+                modalOpen('세탁 삭제가 실패했습니다')
+            }
+        }
+    })
 }
 function removeFontColor(){
     let items = document.querySelectorAll('.nav-item')
@@ -43,23 +65,32 @@ function removeFontColor(){
         element.setAttribute('style', 'color: black')
     })
 }
-function getLaundry(userIdx, status){
+$('#laundryCommentBtn').click(function(){
+    $("#LaundryCommentModal").css("display", "block");
+    $('#laundryComment').focus();
+})
+
+$('.btn-close').click(function(){
+    $('.modal-content').css('display', 'none')
+})
+
+function putLaundry(userIdx, status, string){
     if(status === '배송 중'){
-        $('#doneLaundryModal') .css('display', 'block')
+        $('#doneLaundryModal').css('display', 'block')
         return;
     }
     $.ajax({
-        type : "PUT",
+        type : "PATCH",
         url : "/laundry",
-        data : {'userIdx': userIdx},
+        data : {'userIdx': userIdx, 'next': string},
         success : function (response){
             let result = response['msg']
-            if(result === '수정'){
+            if(result){
                 refresh = 1
                 url = '/'
                 modalOpen('세탁 진행 완료')
-            }else if(result === '실패'){
-                modalOpen('세탁 작업이 실패했습니다')
+            }else{
+                modalOpen('세탁 작업이 실패했습니다.<br>한 건만 받을 수 있습니다.')
             }
         }
     })
@@ -68,34 +99,40 @@ function doneLaundryBtn(userIdx){
     let comment = $('#laundryComment').val()
     $('#doneLaundryModal').css('display', 'none');
     $.ajax({
-        type : "PUT",
+        type : "PATCH",
         url : "/laundry",
         data : {'userIdx': userIdx, 'comment': comment},
         success : function (response){
             let result = response['msg']
-            if(result === '수정'){
+            if(result){
                 refresh = 1
                 url = '/'
-                modalOpen('세탁 진행 완료')
-            }else if(result === '실패'){
-                modalOpen('세탁 작업이 실패했습니다')
+                modalOpen('세탁 진행 완료<br>20000포인트가 적립되었습니다.')
+            }else{
+                modalOpen('세탁 작업이 실패했습니다.')
             }
         }
     })
 }
-function putLaundry(data){
+function commentLaundryBtn(laundryIdx){
+    let star = $('#starSelect option:selected').val();
+    let comment = $('#laundryComment').val();
+    if(star === '평점' || comment === ''){
+        modalOpen('평점과 리뷰를 남겨주세요.')
+        return
+    }
     $.ajax({
-        type : "PUT",
-        url : "/laundry",
-        data : {'userIdx': data},
+        type : "POST",
+        url : "/laundry/" + String(laundryIdx) + "/comment",
+        data : {'star': star, 'comment':comment},
         success : function (response){
             let result = response['msg']
-            if(result === '수정'){
+            if(result){
                 refresh = 1
                 url = '/'
-                modalOpen('세탁 진행 완료')
-            }else if(result === '실패'){
-                modalOpen('세탁 작업이 실패했습니다')
+                modalOpen('평점 작성 완료')
+            }else{
+                modalOpen('평점 작성이 실패했습니다')
             }
         }
     })

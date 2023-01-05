@@ -13,7 +13,7 @@ class LaundryController{
         const laundry = await this.laundryService.findLaundry(user.userIdx);
 
         if(laundry){
-            return res.send({'msg': '실패'});
+            return res.send({'msg': false});
         }
 
         const laundryResult = await this.laundryService.createLaundry(address_give, request_give, user.userIdx);
@@ -21,9 +21,9 @@ class LaundryController{
 
         if(statusResult && laundryResult){
             await this.userService.decreasePoint(user.userIdx, user.point - 20000)
-            return res.send({'msg': '신청'});
+            return res.send({'msg': true});
         } 
-        return res.send({'msg': '실패'});
+        return res.send({'msg': false});
     }
     findLaundriesStandby = async (req, res) => {
         const laundry = await this.laundryService.findLaundriesStandby();
@@ -66,11 +66,15 @@ class LaundryController{
     }
     updateLaundry = async (req, res) => {
         const user = res.locals.user;
-        const { userIdx } = req.body;
+        const { userIdx, next } = req.body;
         let comment;
         try{
             comment = req.body['comment']
         }catch(e){}
+        const laundry = await this.laundryService.findOwnerLaundry(user.userId);
+        if(laundry.length > 0 && next === '신청'){
+            return res.send({'msg': false});
+        }
         const result = await this.laundryService.modifyStatus(user.userId, userIdx, comment);
 
         if(result === 'done'){
@@ -80,7 +84,32 @@ class LaundryController{
         if(result){
             return res.send({'msg': '수정'});
         } else{
-            return res.send({'msg': '실패'});
+            return res.send({'msg': '신청'});
+        }
+    }
+    deleteLaundry = async (req, res) => {
+        const {laundryIdx, laundryReason} = req.body;
+        const user = res.locals.user;
+
+        const result = await this.laundryService.deleteLaundry(laundryIdx, user, laundryReason);
+
+        if(result){
+            return res.send({'msg': true});
+        } else{
+            return res.send({'msg': false});
+        }
+    }
+    createComment = async (req, res) => {
+        const {laundryIdx} = req.params;
+        const {star, comment} = req.body;
+        const user = res.locals.user;
+
+        const result = await this.laundryService.createComment(laundryIdx, user.userId, star, comment);
+    
+        if(result){
+            return res.send({'msg': true});
+        } else{
+            return res.send({'msg': false});
         }
     }
 }

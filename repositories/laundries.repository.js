@@ -1,6 +1,7 @@
 const { laundry : Laundries } = require('../models');
 const { laundry_status : LaundryStatus } = require('../models');
 const { laundry_done : LaundryDone } = require('../models');
+const { laundry_comment : LaundryComment } = require('../models');
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize("don_st", "admin", "spa142857",{
     host: "sparta-gil.cylo4tomjgga.ap-northeast-2.rds.amazonaws.com",
@@ -71,13 +72,30 @@ class LaundryRepository{
         return laundry;
     }
     findDoneLaundrybyOwner = async (userId) => {
-        const laundry = await LaundryDone.findAll({where: {ownerId: userId}});
+        const laundry = await sequelize.query(
+            `SELECT d.laundryIdx, d.userId, d.ownerId, d.address, d.request, d.status, d.reason, c.star, c.comment 
+            FROM laundry_dones d INNER JOIN laundry_comments c ON d.laundryIdx = c.laundryIdx
+            WHERE '` + userId + `'= d.ownerId`,
+            {
+                raw:true,
+                nest:true,
+            }
+        )
+        //const laundry = await LaundryDone.findAll({where: {ownerId: userId}});
 
         return laundry;
     }
     findDoneLaundrybyGuest = async (userId) => {
-        const laundry = await LaundryDone.findAll({where: {userId: userId}});
-
+        const laundry = await sequelize.query(
+            `SELECT d.laundryIdx, d.userId, d.ownerId, d.address, d.request, d.status, d.reason, c.star, c.comment 
+            FROM laundry_dones d INNER JOIN laundry_comments c ON d.laundryIdx = c.laundryIdx
+            WHERE '` + userId + `'= d.userId`,
+            {
+                raw:true,
+                nest:true,
+            }
+        )
+        console.log(laundry);
         return laundry;
     }
     modifyStatus = async (ownerId, userIdx, comment) => {
@@ -92,18 +110,41 @@ class LaundryRepository{
         await LaundryStatus.update({status: nextStatus, ownerId:ownerId}, {where: {laundryIdx: laundry[0].laundryIdx}});
 
         if(nextStatus === '배송 완료'){
-            this.destroyLaundryAndStatus(laundry[0].laundryIdx, ownerId, comment)
+            this.destroyLaundryAndStatus(laundry[0].laundryIdx, ownerId, comment, 'owner')
             return 'done';
         }
 
         return true;
     }
-    destroyLaundryAndStatus = async (laundryIdx, ownerId, comment) => {
-        const laundries = await this.findOwnerLaundry(ownerId);
-        await LaundryDone.create({laundryIdx:laundryIdx, userId:laundries[0].userId, ownerId:ownerId, address:laundries[0].address, 
-                                request:laundries[0].request, status:laundries[0].status, reason:comment})
+    destroyLaundryAndStatus = async (laundryIdx, user, comment, category) => {
+        if(category === 'owner'){
+            const laundries = await this.findOwnerLaundry(user);
+            await LaundryDone.create({laundryIdx:laundryIdx, userId:laundries[0].userId, ownerId:user, address:laundries[0].address, 
+                                    request:laundries[0].request, status:laundries[0].status, reason:comment})
+        } else{
+            const laundries = await this.findLaundryAndStatus(user.userIdx)
+            await LaundryDone.create({laundryIdx:laundryIdx, userId:user.userId, ownerId:'미정', address:laundries[0].address, 
+                request:laundries[0].request, status:laundries[0].status, reason:comment})
+            
+        }
         await LaundryStatus.destroy({where : {laundryIdx: Number(laundryIdx)}})
         await Laundries.destroy({where : {laundryIdx: Number(laundryIdx)}})
+
+        return true
+    }
+    deleteLaundry = async (laundryIdx, userIdx) => {
+        const laundries = await this.findLaundryAndStatus(userIdx)
+        await LaundryDone.create({laundryIdx:laundryIdx, userId:laundries[0].userId, ownerId:ownerId, address:laundries[0].address, 
+            request:laundries[0].request, status:laundries[0].status, reason:comment})
+        await LaundryStatus.destroy({where : {laundryIdx: Number(laundryIdx)}})
+        await Laundries.destroy({where : {laundryIdx: Number(laundryIdx)}})
+
+        return true;
+    }
+    createComment = async (laundryIdx, userId, star, comment) => {
+        const result = await LaundryComment.create({laundryIdx: laundryIdx, userId: userId, star: star, comment: comment})
+        console.log(result);
+        return result;
     }
 }
 

@@ -6,6 +6,8 @@ const LandriesController = require('../controllers/laundries.controller');
 const laundriesController = new LandriesController();
 
 router.post('/', authMiddleware, laundriesController.createLaundry);
-router.put('/', authMiddleware, laundriesController.updateLaundry);
+router.patch('/', authMiddleware, laundriesController.updateLaundry);
+router.delete('/', authMiddleware, laundriesController.deleteLaundry);
+router.post('/:laundryIdx/comment', authMiddleware, laundriesController.createComment)
 
 module.exports = router;

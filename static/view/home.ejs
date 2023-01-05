@@ -26,7 +26,7 @@
   </head>
   <body>
     <div class="container"><%-include('component/header.ejs')%></div>
-    <main class="container">
+    <main class="container" style="min-height:1000px">
       <!-----------------left-sidebar-------------------->
       <div
         class="p-3 p-dm-5 rounded"
@@ -34,7 +34,7 @@
           display: flex;
           flex-direction: column;
           align-items: center;
-          min-height: 150px;
+          min-height: 333px;
         "
         id="firstDiv"
       >
@@ -139,7 +139,7 @@
             </li>
             <button
               class="w-100 mb-2 my-1 btn btn-outline-primary"
-              onclick="getLaundry('<%= laundry.userIdx %>', '<%= laundry.status %>')"
+              onclick="putLaundry('<%= laundry.userIdx %>', '<%= laundry.status %>', '신청')"
               type="button"
             >
               신청하기
@@ -176,12 +176,11 @@
         style="
           display: flex;
           flex-direction: column;
-          justify-content: center;
-          align-items: center;
+          min-height:333px;
         "
       >
         <div
-          style="background-color: lightgrey; width: 100%; text-align: center"
+          style="background-color: lightgrey; width: 100%; text-align: center;"
         >
           진행 중인 세탁 현황
         </div>
@@ -244,10 +243,45 @@
         <button
           class="btn btn-outline-danger"
           style="margin-bottom: auto; margin-top: auto"
-          onclick="deleteLaundry()"
+          onclick="deleteLaundry('<%= guestLaundry[0].laundryIdx %>', '<%= guestLaundry[0].status %>')"
         >
           세탁 취소하기
         </button>
+        <div
+          class="modal-content rounded-4 shadow"
+          id="deleteLaundryModal"
+          style="width: 40%; height: 50%; display: none"
+        >
+          <div class="modal-header p-5 pb-4 border-bottom-0">
+            <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
+            <h1 class="fw-bold mb-0 fs-2">취소 사유</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body p-5 pt-0">
+            <form class="">
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control rounded-3"
+                  id="laundryReason"
+                />
+                <label for="requestInput">사유를 적어주세요</label>
+              </div>
+              <button
+                class="w-100 mb-2 btn btn-lg rounded-3 btn-primary"
+                onclick="deleteLaundryBtn('<%= guestLaundry[0].laundryIdx %>')"
+                type="button"
+              >
+                취소하기
+              </button>
+            </form>
+          </div>
+        </div>
         <% } else { %>
         <ul class="list-group mb-3" style="min-width: 240px; margin-top: 10px">
           <button
@@ -261,6 +295,12 @@
         <% } %> <% } else { %> <%if (ownerLaundry) { %> <%for (const laundry of
         ownerLaundry) { %>
         <ul class="list-group mb-1" style="min-width: 240px; margin-top: 10px">
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">신청 아이디</h6>
+            </div>
+            <span class="text-muted"><%= laundry.userId %></span>
+          </li>
           <li class="list-group-item d-flex justify-content-between lh-sm">
             <div>
               <h6 class="my-0">세탁 주소</h6>
@@ -290,7 +330,7 @@
           class="btn btn-outline-danger"
           id="ownerNextBtn"
           style="margin-bottom: auto; margin-top: auto"
-          onclick="getLaundry('<%= laundry.userIdx %>', '<%= laundry.status %>')"
+          onclick="putLaundry('<%= laundry.userIdx %>', '<%= laundry.status %>', '다음')"
         >
           다음 단계로 넘어가기
         </button>
@@ -347,17 +387,16 @@
         style="
           display: flex;
           flex-direction: column;
-          justify-content: center;
-          align-items: center;
+          min-height:333px
         "
       >
         <div
-          style="background-color: lightgray; width: 100%; text-align: center"
+          style="background-color: lightgray; width: 100%; text-align: center;"
         >
           완료된 세탁 목록
         </div>
-        <div class="album py-2 bg-light">
-          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
+        <div class="album py-2 bg-light" style="width:100%;">
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3" style=" margin-left:auto">
             <%if (user) { %> <%if (doneLaundry) { %> <%for (const laundry of
             doneLaundry) { %>
             <ul
@@ -366,7 +405,7 @@
             >
               <li class="list-group-item d-flex justify-content-between lh-sm">
                 <div>
-                  <h6 class="my-0">신청 유저</h6>
+                  <h6 class="my-0">신청 아이디</h6>
                 </div>
                 <span class="text-muted"><%= laundry.userId %></span>
               </li>
@@ -383,7 +422,7 @@
                 <span class="text-muted"><%= laundry.request %></span>
               </li>
               <li
-                class="list-group-item d-flex justify-content-between bg-light"
+                class="list-group-item d-flex justify-content-between lh-sm"
               >
                 <div class="text">
                   <h6 class="my-0">세탁 단계</h6>
@@ -398,15 +437,77 @@
                 </div>
                 <span class="text-success"><%= laundry.reason %></span>
               </li>
-              <%if (user.category === '손님') { %>
+              <%if (laundry.star) { %>
+              <li
+                class="list-group-item d-flex justify-content-between bg-info" style="--bs-bg-opacity: .5;"
+              >
+                <div class="text">
+                  <h6 class="my-0">평점</h6>
+                </div>
+                <span class="text-muted" id="starComment">
+                  <%for (let i=1; i<=Number(laundry.star); i++) {%>
+                  ★
+                  <% } %>
+                </span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between bg-info" style="--bs-bg-opacity: .5;"
+              >
+                <div class="text">
+                  <h6 class="my-0">리뷰 메세지</h6>
+                </div>
+                <span class="text-muted"><%= laundry.comment %></span>
+              </li>
+              <% } %>
+              <%if (user.category === '손님' && !laundry.star) { %>
               <button
-                class="btn btn-info"
+                class="btn btn-secondary"
                 type="button"
+                id="laundryCommentBtn"
                 style="margin-bottom: auto; margin-top: auto"
               >
                 평점 쓰기
               </button>
-              <% } else { %>
+              <div
+                class="modal-content rounded-4 shadow"
+                id="LaundryCommentModal"
+                style="display: none"
+              >
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                  <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
+                  <h1 class="fw-bold mb-0 fs-2">평점 쓰기</h1>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body p-5 pt-0">
+                  <form class="">
+                    <select class="form-select form-select-sm mb-1" id="starSelect" aria-label=".form-select-sm example">
+                        <option selected>평점</option>
+                        <option value="1">★</option>
+                        <option value="2">★★</option>
+                        <option value="3">★★★</option>
+                        <option value="4">★★★★</option>
+                        <option value="5">★★★★★</option>
+                    </select>
+                    <div class="form-floating mb-3">
+                      <label for="laundryComment" class="form-label">리뷰</label>
+                      <textarea class="form-control" id="laundryComment" rows="3"></textarea>
+                    </div>
+                    <button
+                      class="w-100 mb-2 btn btn-lg rounded-3 btn-primary"
+                      onclick="commentLaundryBtn('<%= laundry.laundryIdx %>')"
+                      type="button"
+                    >
+                      평점 쓰기
+                    </button>
+                  </form>
+                </div>
+              </div>
+              <% } else if (user.category === '사장' && !laundry.star){ %>
               <button
                 class="btn btn-info"
                 type="button"
@@ -430,13 +531,15 @@
               </button>
             </ul>
             <% } %> <% } else { %>
-            <button
-              class="btn btn-outline-primary"
-              style="margin-bottom: auto; margin-top: 5px; min-width:200px"
-              disabled
-            >
+            <div style="margin:auto">
+              <button
+                class="btn btn-outline-primary"
+                style="margin-bottom: auto; margin-top: 5px; min-width:200px; "
+                disabled
+              >
               로그인이 필요합니다
             </button>
+            </div>
             <% } %>
           </div>
         </div>
@@ -453,17 +556,17 @@
       let myLaundryItem = document.getElementById(myLaundryStatus);
       removeFontColor();
       myLaundryItem.setAttribute("style", "color: green");
-      ("<% } else { %>");
+      "<% } else { %>"
       removeFontColor();
-      ("<% } %>");
-      ("<%if (ownerLaundry) { %>");
+      "<% } %>"
+      "<%if (ownerLaundry) { %>"
       let ownerLaundryStatus = "<%-ownerLaundry[0].status%>";
       let ownerLaundryItem = document.getElementById(ownerLaundryStatus);
       removeFontColor();
       ownerLaundryItem.setAttribute("style", "color: green");
-      ("<% } else { %>");
+      "<% } else { %>"
       removeFontColor();
-      ("<% } %>");
+      "<% } %>"
     });
   </script>
 </html>
