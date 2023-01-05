@@ -107,7 +107,7 @@ function doneLaundryBtn(userIdx){
             if(result){
                 refresh = 1
                 url = '/'
-                modalOpen('세탁 진행 완료<br>20000포인트가 적립되었습니다.')
+                modalOpen('세탁 진행 완료<br>10000포인트가 적립되었습니다.')
             }else{
                 modalOpen('세탁 작업이 실패했습니다.')
             }

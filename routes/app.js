@@ -30,6 +30,7 @@ app.get('/', authMiddleware, laundriesController.findLaundryAndStatus, async (re
     } else if(users && users.category === '손님'){
         doneLaundry = await laundriesController.findDoneLaundrybyGuest(users)
     }
+    console.log(doneLaundry)
     res.render('home', {user: users, guestLaundry, stanbyLaundry, ownerLaundry, doneLaundry});
 });
 

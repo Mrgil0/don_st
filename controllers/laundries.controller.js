@@ -20,7 +20,7 @@ class LaundryController{
         const statusResult = await this.laundryService.createStatus(user.userIdx)
 
         if(statusResult && laundryResult){
-            await this.userService.decreasePoint(user.userIdx, user.point - 20000)
+            await this.userService.decreasePoint(user.userIdx, user.point - 10000)
             return res.send({'msg': true});
         } 
         return res.send({'msg': false});
@@ -78,7 +78,7 @@ class LaundryController{
         const result = await this.laundryService.modifyStatus(user.userId, userIdx, comment);
 
         if(result === 'done'){
-            await this.userService.increasePoint(user.userId, user.point + 20000)
+            await this.userService.increasePoint(user.userId, user.point + 10000)
         }
 
         if(result){
