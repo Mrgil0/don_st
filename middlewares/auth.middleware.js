@@ -26,7 +26,10 @@ module.exports = (req, res, next) => {
 
   const { userId } = getAccessTokenPayload(accessToken);
   try {
-    user.findOne({where: {userId: userId}}).then((loginUser) => {
+    user.findOne({
+      attributes: ['userIdx', 'userId', 'phone', 'category', 'point'],
+      where: {userId: userId}
+    }).then((loginUser) => {
       res.locals.user = loginUser;
       next();
     });

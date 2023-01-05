@@ -27,7 +27,6 @@ app.get('/', authMiddleware, laundriesController.findLaundryAndStatus, async (re
         stanbyLaundry = await laundriesController.findLaundriesStandby()
         ownerLaundry = await laundriesController.findOwnerLaundry(users)
         doneLaundry = await laundriesController.findDoneLaundrybyOwner(users)
-        console.log(doneLaundry)
     } else if(users && users.category === '손님'){
         doneLaundry = await laundriesController.findDoneLaundrybyGuest(users)
     }

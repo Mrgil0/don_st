@@ -49,6 +49,16 @@ class LaundryService{
 
         return result;
     }
+    deleteLaundry = async (laundryIdx, user, laundryReason) => {
+        const result = await this.laundryRepository.destroyLaundryAndStatus(laundryIdx, user, laundryReason, 'guest');
+
+        return result;
+    }
+    createComment = async (laundryIdx, userId, star, comment) => {
+        const result = await this.laundryRepository.createComment(laundryIdx, userId, star, comment);
+
+        return result;
+    }
 }
 
 module.exports = LaundryService;
