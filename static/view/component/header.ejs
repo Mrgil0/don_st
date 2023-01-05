@@ -1,32 +1,35 @@
 <header>
   <div class="header-wrap">
-      <div class="hearder-wrap-wrap">
-            <%if (!user) { %>
-              <div class="link">
-                <div class="login-link">
-                  <a href="/login">로그인</a>
-                </div>
-                <div class="register-link">
-                  <a href="/register">회원가입</a>
-                </div>
-              </div>
-            <% } else { %>
-              <div class="link">
-                <div class="point">
-                  <p>내 잔여포인트 : <%= user.point %></p>
-                </div>
-                <div class="logout-link">
-                  <a href="/logout">로그아웃</a>
-                </div>
-              </div>
-            <% } %>
-            <div class="logo">
-              <a href="/">
-                <img class="logo-image"
-                src="../../image/donsetak_logo.jpg"
-              />
-              </a>
+    <div class="hearder-wrap-wrap">
+      <div class="logo">
+        <div style="
+        width:200px;
+        height: 50px; margin-left:10px;"></div>
+        <a href="/">
+          <img class="logo-image"
+          src="../../image/donsetak_logo.jpg"
+        />
+        </a>
+        <%if (!user) { %>
+          <div class="link">
+            <div class="login-link">
+              <a href="/login">로그인</a>
             </div>
-      </div>    
+            <div class="register-link">
+              <a href="/register">회원가입</a>
+            </div>
+          </div>
+        <% } else { %>
+          <div class="link">
+            <div class="point">
+              <p>내 잔여포인트 : <%= user.point %></p>
+            </div>
+            <div class="logout-link">
+              <a href="/logout">로그아웃</a>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>    
   </div>
 </header>

@@ -176,6 +176,7 @@
         style="
           display: flex;
           flex-direction: column;
+          align-items: center;
           min-height:333px;
         "
       >
@@ -387,7 +388,7 @@
         style="
           display: flex;
           flex-direction: column;
-          min-height:333px
+          min-height:333px;     
         "
       >
         <div
@@ -395,7 +396,7 @@
         >
           완료된 세탁 목록
         </div>
-        <div class="album py-2 bg-light" style="width:100%;">
+        <div class="album py-2 bg-light">
           <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3" style=" margin-left:auto">
             <%if (user) { %> <%if (doneLaundry) { %> <%for (const laundry of
             doneLaundry) { %>
