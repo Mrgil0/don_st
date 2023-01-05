@@ -70,10 +70,6 @@ $('#laundryCommentBtn').click(function(){
     $('#laundryComment').focus();
 })
 
-$('.btn-close').click(function(){
-    $('.modal-content').css('display', 'none')
-})
-
 function putLaundry(userIdx, status, string){
     if(status === '배송 중'){
         $('#doneLaundryModal').css('display', 'block')
