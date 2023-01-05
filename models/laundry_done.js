@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
   laundry_done.init({
     laundryIdx: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },

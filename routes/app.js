@@ -42,12 +42,12 @@ app.get('/logout', authMiddleware, laundriesController.findLaundryAndStatus, (re
     res.cookie('accessToken', null);
     res.cookie('refreshToken', null);
     const guestLaundry = res.locals.laundry;
-    let stanbyLaundry, ownerLaundry;
-    res.render('home', {user: null, guestLaundry: guestLaundry, stanbyLaundry: stanbyLaundry, ownerLaundry: ownerLaundry})
+    let stanbyLaundry, ownerLaundry, doneLaundry;
+    res.render('home', {user: null, guestLaundry, stanbyLaundry, ownerLaundry, doneLaundry})
 });
 
 app.get('/register', (req, res) => {
-    res.render('register', {user: false})
+    res.render('register', {user: null})
 });
 
 app.use("/users", [user]);
