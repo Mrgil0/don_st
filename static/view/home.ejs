@@ -476,48 +476,47 @@
               <button
                 class="btn btn-secondary"
                 type="button"
-                id="laundryCommentBtn"
+                onclick="laundryComment('<%= laundry.laundryIdx %>')"
                 style="margin-bottom: auto; margin-top: auto"
               >
                 평점 쓰기
               </button>
-              <div
-                class="modal-content rounded-4 shadow"
-                id="LaundryCommentModal"
-                style="display: none"
-              >
-                <div class="modal-header p-5 pb-4 border-bottom-0">
-                  <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
-                  <h1 class="fw-bold mb-0 fs-2">평점 쓰기</h1>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <div class="modal-body p-5 pt-0">
-                  <form class="">
-                    <select class="form-select form-select-sm mb-1" id="starSelect" aria-label=".form-select-sm example">
-                        <option selected>평점</option>
-                        <option value="1">★</option>
-                        <option value="2">★★</option>
-                        <option value="3">★★★</option>
-                        <option value="4">★★★★</option>
-                        <option value="5">★★★★★</option>
-                    </select>
-                    <div class="form-floating mb-3">
-                      <label for="laundryComment" class="form-label">리뷰</label>
-                      <textarea class="form-control" id="laundryComment" rows="3"></textarea>
-                    </div>
+              <div class="modal-dialog<%= laundry.laundryIdx %>" style="display: none"
+                  id="LaundryCommentModal" style="margin-top: 15px" role="document">
+                <div class="modal-content rounded-4 shadow">
+                  <div class="modal-header p-5 pb-4 border-bottom-0">
+                    <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
+                    <h1 class="fw-bold mb-0 fs-2">평점 쓰기</h1>
                     <button
-                      class="w-100 mb-2 btn btn-lg rounded-3 btn-primary"
-                      onclick="commentLaundryBtn('<%= laundry.laundryIdx %>')"
                       type="button"
-                    >
-                      평점 쓰기
-                    </button>
-                  </form>
+                      class="btn-close"
+                      onclick="closeModel('<%= laundry.laundryIdx %>')"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body p-5 pt-0">
+                    <form class="">
+                      <select class="form-select form-select-sm mb-1" id="starSelect" aria-label=".form-select-sm example">
+                          <option selected>평점</option>
+                          <option value="1">★</option>
+                          <option value="2">★★</option>
+                          <option value="3">★★★</option>
+                          <option value="4">★★★★</option>
+                          <option value="5">★★★★★</option>
+                      </select>
+                      <div class="mb-3">
+                        <textarea class="form-control" id="laundryComment" rows="3" placeholder="리뷰"></textarea>
+                      </div>
+                      <button
+                        class="w-100 mb-2 btn btn-lg rounded-3 btn-primary"
+                        onclick="commentLaundryBtn('<%= laundry.laundryIdx %>')"
+                        type="button"
+                      >
+                        평점 쓰기
+                      </button>
+                    </form>
+                  </div>
                 </div>
               </div>
               <% } else if (user.category === '사장' && !laundry.star){ %>
