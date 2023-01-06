@@ -187,8 +187,7 @@
         </div>
         <ul
           class="nav justify-content-center rounded"
-          style="border: 2px solid #000; margin-top: 5px"
-        >
+          style="border: 2px solid #000; margin-top: 5px">
           <li class="nav-item">
             <a class="nav-link disabled" id="대기 중">대기 중</a>
           </li>
@@ -404,8 +403,7 @@
         </div>
         <div class="album py-2 bg-light">
           <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3" style=" margin-left:auto">
-            <%if (user) { %> <%if (doneLaundry) { %> <%for (const laundry of
-            doneLaundry) { %>
+            <%if (user) { %> <%if (doneLaundry) { %> <%for (const laundry of doneLaundry) { %>
             <ul
               class="list-group mb-1"
               style="min-width: 240px; margin-top: 10px"
@@ -440,14 +438,24 @@
                 <div class="text">
                   <h6 class="my-0">세탁 단계</h6>
                 </div>
+                <%if (laundry.status === '대기 중') { %>
+                  <span class="text-muted">취소 됨</span>
+                <% } else { %>
                 <span class="text-muted"><%= laundry.status %></span>
+                <% } %>
               </li>
               <li
                 class="list-group-item d-flex justify-content-between bg-light"
               >
+              <%if (laundry.status === '대기 중') { %>
+                <div class="text-danger">
+                  <h6 class="my-0">중단 사유</h6>
+                </div>
+              <% } else { %>
                 <div class="text-success">
                   <h6 class="my-0">완료 메세지</h6>
                 </div>
+              <% } %>
                 <span class="text-success"><%= laundry.reason %></span>
               </li>
               <%if (laundry.star) { %>
@@ -472,7 +480,7 @@
                 <span class="text-muted"><%= laundry.comment %></span>
               </li>
               <% } %>
-              <%if (user.category === '손님' && !laundry.star) { %>
+              <%if (user.category === '손님' && !laundry.star && laundry.status != '대기 중') { %>
               <button
                 class="btn btn-secondary"
                 type="button"
@@ -519,7 +527,7 @@
                   </div>
                 </div>
               </div>
-              <% } else if (user.category === '사장' && !laundry.star){ %>
+              <% } else if (user.category === '사장' && !laundry.star && laundry.status != '대기 중'){ %>
               <button
                 class="btn btn-outline-primary"
                 type="button"
